@@ -27,7 +27,7 @@ const G = {
 options = {
 
   isPlayingBgm: true,
-  theme: "dark",
+  theme: "crt",
   viewSize: {x: G.WIDTH, y: G.HEIGHT}
 };
 
@@ -58,6 +58,11 @@ function update() {
 
   color("black");
   char("a",player.pos);
+  color("yellow");
+  particle(player.pos,0.5,1,160,1);
+  color("cyan");
+  particle(player.pos,0.2,1,160,1);
+
   if(player.pos.y == 9 || player.pos.y == 90){
     player.dir *= -1;
   }
@@ -72,9 +77,11 @@ function update() {
   }
 
   if(bullet!=null){
-    color("light_yellow");  
+    color("red");  
     bullet.pos.x+= G.BULLET_SPEED;
     box(bullet.pos,2);
+    color("light_red");
+    particle(bullet.pos,1,1,160,1);
   }
 
   blockArr.forEach( (b) => {
@@ -96,7 +103,7 @@ function handleCollisions(){
   remove(bulletFragArr,(frag) => {
 
     frag.pos.addWithAngle(frag.angle,G.BULLET_FRAG_SPEED);
-    color("light_yellow");
+    color("yellow");
     if(box(frag.pos,2).isColliding.rect.light_cyan && isInBounds(frag.pos)){
       return true;
     }
@@ -106,7 +113,7 @@ function handleCollisions(){
   remove(blockArr, (b) => {
     
     color(colors[b.color-1]);
-    if(box(b.vec,G.BLOCK_SIZE).isColliding.rect.light_yellow){
+    if(box(b.vec,G.BLOCK_SIZE).isColliding.rect.yellow){
       b.color--;
     }
     if(b.color == 0){
@@ -146,6 +153,8 @@ function generateBlocks(){
 function explodeBullet(){
 
   play("powerUp");
+  color("light_yellow");
+  particle(bullet.pos);
   for(let a = 0;a<360;a+= 24){
     bulletFragArr.push({pos: vec(bullet.pos.x,bullet.pos.y), angle: a});
   }
