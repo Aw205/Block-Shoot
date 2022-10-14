@@ -5,12 +5,12 @@ description = `
 
 characters = [
   `
-  ll
-  ll
-ccllcc
-ccllcc
-ccllcc
-cc  cc
+bc
+bcpl
+cPllyY
+cPllyY
+bcpl
+bc
 `
 ];
 
@@ -19,21 +19,21 @@ const G = {
 	HEIGHT: 100,
   PLAYER_SPEED: 0.5,
   PLAYER_SIZE: 5,
-  BULLET_SPEED: 0.5,
-  BULLET_FRAG_SPEED: 0.8,
+  BULLET_SPEED: 0.8,
+  BULLET_FRAG_SPEED: 1,
   BLOCK_SIZE: 7
 };
 
 options = {
 
-  isPlayingBgm: false,
+  isPlayingBgm: true,
   theme: "dark",
   viewSize: {x: G.WIDTH, y: G.HEIGHT}
 };
 
 let colors = ["light_black","red","green","yellow","blue","purple","cyan"];
 let lastTick;
-let spawnRate = 2; //in seconds
+let spawnRate = 3; //in seconds
 let block_speed = 0.2;
 let bullet;
 let blockArr;
@@ -52,11 +52,12 @@ function update() {
 
   if(ticks - lastTick == 60 * spawnRate){
     lastTick = ticks;
-    block_speed+= 0.02* difficulty;
+    block_speed+= 0.01* difficulty;
     generateBlocks();
   }
 
-  box(player.pos,G.PLAYER_SIZE);
+  color("black");
+  char("a",player.pos);
   if(player.pos.y == 9 || player.pos.y == 90){
     player.dir *= -1;
   }
@@ -71,7 +72,7 @@ function update() {
   }
 
   if(bullet!=null){
-    color("yellow");  
+    color("light_yellow");  
     bullet.pos.x+= G.BULLET_SPEED;
     box(bullet.pos,2);
   }
@@ -123,7 +124,7 @@ function handleCollisions(){
 function generateBlocks(){
 
   let generatedSquares = new Set();
-        let interval = [rndi(5,50),rndi(55,100)];
+        let interval = [rndi(5,50),rndi(55,90)];
         let num = rndi(0,8);
         for(var i = 0; i< interval.length;i++){
             let y = interval[i];
@@ -144,6 +145,7 @@ function generateBlocks(){
 
 function explodeBullet(){
 
+  play("powerUp");
   for(let a = 0;a<360;a+= 24){
     bulletFragArr.push({pos: vec(bullet.pos.x,bullet.pos.y), angle: a});
   }
@@ -151,7 +153,7 @@ function explodeBullet(){
 }
 
 function isInBounds(vec){
-  return (vec.x > 0 && vec.x > G.WIDTH && vec.y > 0 && vec.y < G.HEIGHT);
+  return (vec.x > 0 && vec.x < G.WIDTH && vec.y > 0 && vec.y < G.HEIGHT);
 }
 
 addEventListener("load", onLoad);
